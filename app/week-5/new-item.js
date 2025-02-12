@@ -81,16 +81,16 @@ export default function StudentInfo() {
                 onChange={(e) => setCategory(e.target.value)}
                 className="p-3 font-bold w-40 rounded-lg"
               >
-                <option value="produce">Produce</option>
-                <option value="dairy">Dairy</option>
-                <option value="bakery">Bakery</option>
-                <option value="meat">Meat</option>
-                <option value="frozen">Frozen Foods</option>
-                <option value="canned">Canned Goods</option>
-                <option value="dry">Dry Goods</option>
-                <option value="beverages">Beverages</option>
-                <option value="snacks">Snacks</option>
-                <option value="other">Other</option>
+                <option value="Produce">Produce</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Bakery">Bakery</option>
+                <option value="Meat">Meat</option>
+                <option value="Frozen">Frozen Foods</option>
+                <option value="Canned">Canned Goods</option>
+                <option value="Dry">Dry Goods</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Other">Other</option>
               </select>
             </div>
           </div>
