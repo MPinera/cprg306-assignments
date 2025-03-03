@@ -1,104 +1,90 @@
-import React from "react";
+"use client";
 
-const item1 = {
-  name: "milk, 4 L 🥛",
-  quantity: 1,
-  category: "dairy",
-};
-
-const item2 = {
-  name: "bread 🍞",
-  quantity: 2,
-  category: "bakery",
-};
-
-const item3 = {
-  name: "eggs, dozen 🥚",
-  quantity: 2,
-  category: "dairy",
-};
-
-const item4 = {
-  name: "bananas 🍌",
-  quantity: 6,
-  category: "produce",
-};
-
-const item5 = {
-  name: "broccoli 🥦",
-  quantity: 3,
-  category: "produce",
-};
-
-const item6 = {
-  name: "chicken breasts, 1 kg 🍗",
-  quantity: 1,
-  category: "meat",
-};
-
-const item7 = {
-  name: "pasta sauce 🍝",
-  quantity: 3,
-  category: "canned goods",
-};
-
-const item8 = {
-  name: "spaghetti, 454 g 🍝",
-  quantity: 2,
-  category: "dry goods",
-};
-
-const item9 = {
-  name: "toilet paper, 12 pack 🧻",
-  quantity: 1,
-  category: "household",
-};
-
-const item10 = {
-  name: "paper towels, 6 pack",
-  quantity: 1,
-  category: "household",
-};
-
-const item11 = {
-  name: "dish soap 🍽️",
-  quantity: 1,
-  category: "household",
-};
-
-const item12 = {
-  name: "hand soap 🧼",
-  quantity: 4,
-  category: "household",
-};
-
-const items = [
-  item1,
-  item2,
-  item3,
-  item4,
-  item5,
-  item6,
-  item7,
-  item8,
-  item9,
-  item10,
-  item11,
-  item12,
-];
+import React, { useState } from "react";
+import ItemData from "./items.json";
+import Item from "./item.js";
 
 const ItemList = () => {
+  const [sortBy, setSortBy] = useState("name");
+  let items = [...ItemData];
+
+  items.sort((a, b) => {
+    if (sortBy === "name") {
+      return a.name.localeCompare(b.name);
+    } else if (sortBy === "category") {
+      return a.category.localeCompare(b.category);
+    } else if (sortBy === "grouped") {
+      return (
+        a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
+      );
+    }
+    return 0;
+  });
+
+  const groupedItems = items.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
   return (
     <div className="bg-blue-200 min-h-screen p-4">
+      <div className="text-xl font-bold flex space-x-4 mb-4">
+        <p>Sort By:</p>
+        <button
+          onClick={() => setSortBy("name")}
+          className={`text-xl font-bold w-28 p-1 m-2 ${sortBy === "name" ? "bg-blue-300 text-white" : "bg-blue-500 text-white"}`}
+        >
+          Name
+        </button>
+        <button
+          onClick={() => setSortBy("category")}
+          className={`text-xl font-bold w-28 p-1 m-2 ${sortBy === "category" ? "bg-blue-300 text-white" : "bg-blue-500 text-white"}`}
+        >
+          Category
+        </button>
+        <button
+          onClick={() => setSortBy("grouped")}
+          className={`text-xl font-bold w-28 p-1 m-2 ${sortBy === "grouped" ? "bg-blue-300 text-white" : "bg-blue-500 text-white"}`}
+        >
+          Grouped Category
+        </button>
+      </div>
       <ul>
-        {items.map((item, index) => (
-          <li key={index} className="p-2 m-4 bg-pink-50 max-w-sm">
-            <h2 className="text-xl font-bold">{item.name}</h2>
-            <div className="text-sm">
-              Buy {item.quantity} in {item.category}
-            </div>
-          </li>
-        ))}
+        {sortBy === "grouped"
+          ? Object.keys(groupedItems)
+              .sort()
+              .map((category) => (
+                <li key={category} className="p-2 m-4 bg-pink-50 max-w-md">
+                  <h2 className="text-lg font-semibold capitalize">
+                    {category}
+                  </h2>
+                  <ul>
+                    {groupedItems[category]
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((item) => (
+                        <div key={item.id} className="p-2 m-2 bg-white">
+                          <Item
+                            name={item.name}
+                            quantity={item.quantity}
+                            category={item.category}
+                          />
+                        </div>
+                      ))}
+                  </ul>
+                </li>
+              ))
+          : items.map((item) => (
+              <li key={item.id} className="p-2 m-4 bg-pink-50 max-w-md">
+                <Item
+                  name={item.name}
+                  quantity={item.quantity}
+                  category={item.category}
+                />
+              </li>
+            ))}
       </ul>
     </div>
   );
