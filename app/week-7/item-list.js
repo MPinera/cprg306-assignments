@@ -6,7 +6,7 @@ import Item from "./item.js";
 const ItemList = ({ items }) => {
   const [sortBy, setSortBy] = useState("name");
 
-  items.sort((a, b) => {
+  const sortedItems = [...items].sort((a, b) => {
     if (sortBy === "name") {
       return a.name.localeCompare(b.name);
     } else if (sortBy === "category") {
@@ -19,7 +19,7 @@ const ItemList = ({ items }) => {
     return 0;
   });
 
-  const groupedItems = items.reduce((acc, item) => {
+  const groupedItems = sortedItems.reduce((acc, item) => {
     if (!acc[item.category]) {
       acc[item.category] = [];
     }
@@ -28,7 +28,7 @@ const ItemList = ({ items }) => {
   }, {});
 
   return (
-    <div className="bg-blue-200 min-h-screen p-4">
+    <div className="bg-blue-200 min-h-screen p-2">
       <div className="text-xl font-bold flex space-x-4 mb-4">
         <p>Sort By:</p>
         <button
@@ -74,7 +74,7 @@ const ItemList = ({ items }) => {
                   </ul>
                 </li>
               ))
-          : items.map((item) => (
+          : sortedItems.map((item) => (
               <li key={item.id} className="p-2 m-4 bg-pink-50 max-w-md">
                 <Item
                   name={item.name}
